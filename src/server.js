@@ -1,6 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server'
 
-import { teams, matches } from './data'
+import { teams, games } from './data'
 
 // The GraphQL schema
 const typeDefs = gql`
@@ -10,6 +10,7 @@ const typeDefs = gql`
     allTeams: [Team]!
     allGames: [Game]!
     gameWithPenalties: Game
+    aGame(id: Float): Game
   }
 
   type Team {
@@ -21,15 +22,6 @@ const typeDefs = gql`
     a: Float!
     b: Float!
   }
-
-  # enum Phase {
-  #   GROUP
-  #   ONE_EIGHT
-  #   QUARTER_FINAL
-  #   SEMI_FINAL
-  #   THIRD_PLACE
-  #   FINAL
-  # }
 
   type Game {
     phase: String!
@@ -46,8 +38,8 @@ const resolvers = {
   Query: {
     hello: () => 'world',
     allTeams: () => Object.keys(teams).map(key => teams[key]),
-    allGames: () => matches,
-    gameWithPenalties: () => matches.find(match => match.penalties !== undefined)
+    allGames: () => games,
+    gameWithPenalties: () => games.find(match => match.penalties !== undefined)
   },
   Team: {
     code: name => {

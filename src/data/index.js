@@ -1,4 +1,5 @@
 import { teams } from './teams'
-import { matches } from './matches'
+import { games } from './games'
+import { players } from './players'
 
-export { teams, matches }
+export { teams, games, players }
