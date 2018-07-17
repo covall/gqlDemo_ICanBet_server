@@ -16,6 +16,7 @@ const typeDefs = gql`
   type Team {
     code: String!
     name: String!
+    group: String!
   }
 
   type Result {
@@ -37,15 +38,9 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     hello: () => 'world',
-    allTeams: () => Object.keys(teams).map(key => teams[key]),
+    allTeams: () => teams,
     allGames: () => games,
     gameWithPenalties: () => games.find(match => match.penalties !== undefined)
-  },
-  Team: {
-    code: name => {
-      return Object.keys(teams).find(key => teams[key] === name)
-    },
-    name: name => name
   },
   Result: {
     a: array => {

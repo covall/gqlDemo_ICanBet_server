@@ -11,19 +11,19 @@ const randomResult = (withPenalties = false) => {
 
 const randomBets = () => {
   return {
-    firstPlace: randomProperty(teams),
-    secondPlace: randomProperty(teams),
-    thirdPlace: randomProperty(teams),
-    fourthPlace: randomProperty(teams),
+    firstPlace: getRandomTeam(teams),
+    secondPlace: getRandomTeam(teams),
+    thirdPlace: getRandomTeam(teams),
+    fourthPlace: getRandomTeam(teams),
     games: Array(64)
       .fill()
       .map((_, index) => ({ [index + 1]: randomResult(index + 1 > 48) }))
   }
 }
 
-const randomProperty = obj => {
-  var keys = Object.keys(obj)
-  return obj[keys[Math.floor(Math.random() * keys.length)]]
+const getRandomTeam = teams => {
+  const index = Math.floor(Math.random() * teams.length)
+  return teams[index]
 }
 
 const players = [
