@@ -1,20 +1,48 @@
 import { ApolloServer, gql } from 'apollo-server'
 
-import { teams, games } from './data'
+import { teams, games, getGame } from './data'
 
 // The GraphQL schema
 const typeDefs = gql`
+  schema {
+    query: Query
+    mutation: Mutation
+  }
+
   type Query {
     "A simple type for getting started!"
     hello: String
     allTeams: [Team]!
     allGames: [Game]!
     gameWithPenalties: Game
-    aGame(id: Float): Game
+    aGame(id: ID!): Game
+  }
+
+  enum TeamAOrB {
+    A
+    B
+  }
+
+  input BetInput {
+    resultA: Int!
+    resultB: Int!
+    wonInPenalties: TeamAOrB
+  }
+
+  type Mutation {
+    bet(gameId: ID!, userId: ID!, bet: BetInput!): Bet
+  }
+
+  type Bet {
+    gameId: ID!
+    userID: ID!
+    resultA: Int!
+    result: Result
+    penalties: TeamAOrB
   }
 
   type Team {
-    code: String!
+    code: ID!
     name: String!
     group: String!
   }
@@ -25,12 +53,13 @@ const typeDefs = gql`
   }
 
   type Game {
+    id: ID!
     phase: String!
     date: String!
     teamA: Team!
     teamB: Team!
     result: Result
-    penalties: Result
+    penalties: TeamAOrB
   }
 `
 
@@ -40,7 +69,12 @@ const resolvers = {
     hello: () => 'world',
     allTeams: () => teams,
     allGames: () => games,
-    gameWithPenalties: () => games.find(match => match.penalties !== undefined)
+    gameWithPenalties: () => games.find(match => match.penalties !== undefined),
+    aGame: (_obj, args) => {
+      const game = getGame(args.id)
+      console.log('aGame', _obj, args, game)
+      return game
+    }
   },
   Result: {
     a: array => {

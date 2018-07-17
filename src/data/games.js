@@ -533,4 +533,6 @@ const games = [
   }
 ]
 
-export { games }
+const getGame = id => games.find(g => String(g.id) === String(id))
+
+export { games, getGame }
