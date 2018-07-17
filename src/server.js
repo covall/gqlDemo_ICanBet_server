@@ -1,6 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server'
 
-import { teams, games, getGame } from './data'
+import { teams, games, getGame, gamblers } from './data'
 
 // The GraphQL schema
 const typeDefs = gql`
@@ -14,8 +14,12 @@ const typeDefs = gql`
     hello: String
     allTeams: [Team]!
     allGames: [Game]!
-    gameWithPenalties: Game
+    allGamblers: [Gambler]!
     aGame(id: ID!): Game
+  }
+
+  type Mutation {
+    bet(gameId: ID!, gamblerId: ID!, bet: BetInput!): Bet
   }
 
   enum TeamAOrB {
@@ -24,21 +28,21 @@ const typeDefs = gql`
   }
 
   input BetInput {
-    resultA: Int!
-    resultB: Int!
-    wonInPenalties: TeamAOrB
+    a: Int!
+    b: Int!
+    winInPenalties: TeamAOrB
   }
 
-  type Mutation {
-    bet(gameId: ID!, userId: ID!, bet: BetInput!): Bet
+  type BetNumbers {
+    a: Int!
+    b: Int!
+    winInPenalties: TeamAOrB
   }
 
   type Bet {
-    gameId: ID!
-    userID: ID!
-    resultA: Int!
-    result: Result
-    penalties: TeamAOrB
+    game: Game!
+    gambler: Gambler!
+    result: BetNumbers
   }
 
   type Team {
@@ -47,9 +51,17 @@ const typeDefs = gql`
     group: String!
   }
 
-  type Result {
-    a: Float!
-    b: Float!
+  type GameResult {
+    a: Int!
+    b: Int!
+    aPenalties: Int
+    bPenalties: Int
+  }
+
+  type Gambler {
+    id: ID!
+    name: String!
+    bets: [Bet]!
   }
 
   type Game {
@@ -58,8 +70,7 @@ const typeDefs = gql`
     date: String!
     teamA: Team!
     teamB: Team!
-    result: Result
-    penalties: TeamAOrB
+    result: GameResult
   }
 `
 
@@ -69,19 +80,60 @@ const resolvers = {
     hello: () => 'world',
     allTeams: () => teams,
     allGames: () => games,
-    gameWithPenalties: () => games.find(match => match.penalties !== undefined),
+    allGamblers: () => gamblers,
+
     aGame: (_obj, args) => {
       const game = getGame(args.id)
       console.log('aGame', _obj, args, game)
       return game
     }
   },
-  Result: {
+  Game: {
+    result: game => {
+      const penalties = game.penalties || []
+      return [...game.result, ...penalties]
+    }
+  },
+  GameResult: {
     a: array => {
       return array[0]
     },
     b: array => {
       return array[1]
+    },
+    aPenalties: array => {
+      return array[2]
+    },
+    bPenalties: array => {
+      return array[3]
+    }
+  },
+  Gambler: {
+    name: gambler => gambler.nick,
+    id: gambler => gambler.nick,
+    bets: gambler => {
+      if (!gambler.bets || !gambler.bets.games) {
+        return []
+      }
+
+      const gambledGames = gambler.bets.games
+      return gambledGames.map(g => {
+        return {
+          game: getGame(g.gameId),
+          gambler,
+          result: g.result
+        }
+      })
+    }
+  },
+  BetNumbers: {
+    a: result => result[0],
+    b: result => result[1],
+    winInPenalties: result => {
+      if (!result[2]) {
+        return null
+      }
+      return result[2] === 1 ? 'A' : 'B'
     }
   }
 }

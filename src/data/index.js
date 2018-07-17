@@ -1,5 +1,5 @@
 import { teams, getTeam } from './teams'
 import { games, getGame } from './games'
-import { players } from './players'
+import { gamblers } from './gamblers'
 
-export { teams, getTeam, games, getGame, players }
+export { teams, getTeam, games, getGame, gamblers }

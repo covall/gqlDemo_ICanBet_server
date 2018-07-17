@@ -522,14 +522,16 @@ const games = [
     phase: phases.THIRD_PLACE,
     date: '2018-07-14T00:00:00',
     teamA: getTeam('BEL'),
-    teamB: getTeam('ENG')
+    teamB: getTeam('ENG'),
+    result: [2, 0]
   },
   {
     id: 64,
     phase: phases.FINAL,
     date: '2018-07-15T00:00:00',
     teamA: getTeam('CRO'),
-    teamB: getTeam('ENG')
+    teamB: getTeam('FRA'),
+    result: [2, 4]
   }
 ]
 
