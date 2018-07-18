@@ -17,7 +17,7 @@ const randomBets = () => {
     fourthPlace: getRandomTeam(teams),
     games: Array(64)
       .fill()
-      .map((_, index) => ({ gameId: index + 1, result: randomResult(index + 1 > 48) }))
+      .map((_, index) => ({ id: index + 1, bet: randomResult(index + 1 > 48) }))
   }
 }
 
