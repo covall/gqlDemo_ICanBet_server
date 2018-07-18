@@ -40,6 +40,7 @@ const typeDefs = gql`
     game: Game!
     gambler: Gambler!
     bet: BetNumbers
+    score: Int
   }
 
   type Team {

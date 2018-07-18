@@ -1,6 +1,35 @@
 // A map of functions which return data for the schema.
 import { teams, games, getGame, gamblers } from './data'
 
+const calculateScore = (gameResult, bet) => {
+  // console.log('calculateScore', gameResult, bet)
+  if (gameResult[0] === bet[0] && gameResult[1] === bet[1]) {
+    if (
+      (gameResult[2] > gameResult[3] && bet[2] === 1) ||
+      (gameResult[2] < gameResult[3] && bet[2] === 2)
+    ) {
+      // prawidłowo obstawione karne
+      return 5
+    }
+    return 4
+  } else if (gameResult[0] - gameResult[1] === bet[0] - bet[1]) {
+    if (
+      (gameResult[2] > gameResult[3] && bet[2] === 1) ||
+      (gameResult[2] < gameResult[3] && bet[2] === 2)
+    ) {
+      // prawidłowo obstawione karne
+      return 3
+    }
+    return 2
+  } else if (
+    (gameResult[0] > gameResult[1] && bet[0] > bet[1]) ||
+    (gameResult[0] < gameResult[1] && bet[0] < bet[1])
+  ) {
+    return 1
+  }
+  return 0
+}
+
 const resolvers = {
   Mutation: {
     bet: (root, { gameId, gamblerId, bet }) => {
@@ -76,10 +105,13 @@ const resolvers = {
 
       const gambledGames = gambler.bets.games
       const bets = gambledGames.map(g => {
+        const game = getGame(g.id)
+        const score = calculateScore(game.result, g.bet)
         return {
-          game: getGame(g.id),
+          game,
           gambler,
-          bet: g.bet
+          bet: g.bet,
+          score
         }
       })
       return bets
