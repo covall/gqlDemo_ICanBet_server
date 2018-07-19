@@ -8,12 +8,12 @@ const randomResult = (withPenalties = false) => {
 }
 
 const randomBets = () => {
-  return {
-    games: Array(64)
-      .fill()
-      .map((_, index) => ({ id: index + 1, bet: randomResult(index + 1 > 48) }))
-  }
+  return Array(64)
+    .fill()
+    .map((_, index) => ({ gameId: index + 1, betNumbers: randomResult(index + 1 > 48) }))
 }
+
+const getGambler = gamblerId => gamblers.find(gambler => gambler.nick === gamblerId)
 
 const gamblers = [
   {
@@ -159,4 +159,4 @@ const gamblers = [
   }
 ]
 
-export { gamblers }
+export { gamblers, getGambler }

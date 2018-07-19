@@ -1,12 +1,31 @@
 import { getGame } from './data'
 
-const calculateGameScore = gameWithBet => {
-  const game = getGame(gameWithBet.id)
-  return calculateScore(game.result, gameWithBet.bet)
+const recalculatePointsAndPlaces = gamblers => {
+  gamblers.forEach(gambler => {
+    gambler.bets = gambler.bets.map(bet => {
+      return { ...bet, points: calculateGamePoints(bet) }
+    })
+
+    gambler.points = gambler.bets.reduce((sum, bet) => {
+      return sum + bet.points
+    }, 0)
+  })
+
+  let place = 1
+  gamblers.sort((a, b) => b.points - a.points).forEach((gambler, index) => {
+    if (index > 0 && gambler.points < gamblers[index - 1].points) {
+      place = index + 1
+    }
+    gambler.place = place
+  })
+}
+
+const calculateGamePoints = bet => {
+  const game = getGame(bet.gameId)
+  return calculateScore(game.result, bet.betNumbers)
 }
 
 const calculateScore = (gameResult, bet) => {
-  // console.log('calculateScore', gameResult, bet)
   if (gameResult[0] === bet[0] && gameResult[1] === bet[1]) {
     if (
       (gameResult[2] > gameResult[3] && bet[2] === 1) ||
@@ -34,4 +53,4 @@ const calculateScore = (gameResult, bet) => {
   return 0
 }
 
-export { calculateGameScore }
+export { recalculatePointsAndPlaces }

@@ -1,34 +1,31 @@
 // A map of functions which return data for the schema.
-import { teams, games, getGame, gamblers } from './data'
-import { calculateGameScore } from './pointsAndPlace'
+import { teams, games, getGame, gamblers, getGambler } from './data'
+import { recalculatePointsAndPlaces } from './pointsAndPlace'
 
-gamblers.forEach(gambler => {
-  gambler.bets.games = gambler.bets.games.map(gameWithBets => {
-    return { ...gameWithBets, points: calculateGameScore(gameWithBets) }
-  })
-})
+recalculatePointsAndPlaces(gamblers)
 
 const resolvers = {
   Mutation: {
-    bet: (_root, { gameId, gamblerId, bet }) => {
+    bet: (_root, { gameId, gamblerId, betInput }) => {
       const gambler = gamblers.find(gambler => gambler.nick === gamblerId)
       ensureGamblerHasGames(gambler)
-      const gameWithBet = gambler.bets.games.find(game => String(game.id) === String(gameId))
-      if (gameWithBet) {
-        gameWithBet.bet = [bet.a, bet.b]
-        if (bet.winInPenalties) {
-          if (bet.winInPenalties === 'A') {
-            gameWithBet.bet.push(1)
+      const bet = gambler.bets.find(bet => String(bet.gameId) === String(gameId))
+      if (bet) {
+        bet.betNumbers = [betInput.a, betInput.b]
+        if (betInput.winInPenalties) {
+          if (betInput.winInPenalties === 'A') {
+            bet.betNumbers.push(1)
           } else {
-            gameWithBet.bet.push(2)
+            bet.betNumbers.push(2)
           }
         }
-        // TODO: recalculate points and places
-        gameWithBet.points = calculateGameScore(gameWithBet)
+        // !recalculate points and places
+        recalculatePointsAndPlaces(gamblers)
         return {
           game: getGame(gameId),
           gambler,
-          bet: gameWithBet.bet
+          betNumbers: bet.betNumbers,
+          points: bet.points
         }
       }
       return null
@@ -36,14 +33,11 @@ const resolvers = {
   },
   Query: {
     hello: () => 'world',
-    allTeams: () => teams,
-    allGames: () => games,
-    allGamblers: () => gamblers,
-
-    aGame: (_obj, args) => {
-      const game = getGame(args.id)
-      return game
-    }
+    teams: () => teams,
+    games: () => games,
+    game: (_obj, args) => getGame(args.id),
+    gamblers: () => gamblers,
+    gambler: (_obj, args) => getGambler(args.id)
   },
   Game: {
     result: game => {
@@ -69,36 +63,19 @@ const resolvers = {
     name: gambler => gambler.nick,
     id: gambler => gambler.nick,
     bets: gambler => {
-      if (!gambler.bets || !gambler.bets.games) {
+      if (!gambler.bets) {
         return []
       }
 
-      const gamesWithBets = gambler.bets.games
-      const bets = gamesWithBets.map(gameWithBet => {
-        console.log('gameWithBet', gameWithBet)
-
+      return gambler.bets.map(gameWithBet => {
         return {
           gambler,
-          game: getGame(gameWithBet.id),
-          bet: gameWithBet.bet,
+          game: getGame(gameWithBet.gameId),
+          betNumbers: gameWithBet.betNumbers,
           points: gameWithBet.points
         }
       })
-      return bets
-    },
-    points: () => Math.floor(Math.random() * 70) + 1,
-    place: () => Math.floor(Math.random() * 70) + 1
-    // points: gambler => {
-    //   if (Array.isArray(gambler.bets.games)) {
-    //     return gambler.bets.games.reduce((prev, curr) => {
-    //       const game = getGame(curr.id)
-    //       return prev + calculateScore(game.result, curr.bet)
-    //     }, 0)
-    //   } else {
-    //     return 0
-    //   }
-    // },
-    // place: gambler => {}
+    }
   },
   BetNumbers: {
     a: result => result[0],
@@ -112,8 +89,6 @@ const resolvers = {
   }
 }
 
-export default resolvers
-
 function ensureGamblerHasGames(gambler) {
   if (!gambler.bets) {
     gambler.bets = {}
@@ -122,3 +97,5 @@ function ensureGamblerHasGames(gambler) {
     gambler.bets.games = []
   }
 }
+
+export default resolvers

@@ -9,14 +9,15 @@ const typeDefs = gql`
   type Query {
     "A simple type for getting started!"
     hello: String
-    allTeams: [Team]!
-    allGames: [Game]!
-    allGamblers: [Gambler]!
-    aGame(id: ID!): Game
+    teams: [Team]!
+    games: [Game]!
+    game(id: ID!): Game
+    gamblers: [Gambler]!
+    gambler(id: ID!): Gambler
   }
 
   type Mutation {
-    bet(gameId: ID!, gamblerId: ID!, bet: BetInput!): Bet
+    bet(gameId: ID!, gamblerId: ID!, betInput: BetInput!): Bet
   }
 
   enum TeamAOrB {
@@ -39,7 +40,7 @@ const typeDefs = gql`
   type Bet {
     game: Game!
     gambler: Gambler!
-    bet: BetNumbers
+    betNumbers: BetNumbers
     points: Int
   }
 
