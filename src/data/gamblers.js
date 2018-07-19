@@ -116,46 +116,6 @@ const gamblers = [
   {
     nick: 'Kuba "Szef"',
     bets: randomBets()
-  },
-  {
-    nick: 'Elo',
-    isBot: true,
-    bets: randomBets()
-  },
-  {
-    nick: 'Consensus',
-    isBot: true,
-    bets: randomBets()
-  },
-  {
-    nick: 'Ensemble',
-    isBot: true,
-    bets: randomBets()
-  },
-  {
-    nick: 'Elo+1',
-    isBot: true,
-    bets: randomBets()
-  },
-  {
-    nick: 'Consensus+1',
-    isBot: true,
-    bets: randomBets()
-  },
-  {
-    nick: 'Ensemble+1',
-    isBot: true,
-    bets: randomBets()
-  },
-  {
-    nick: '538',
-    isBot: true,
-    bets: randomBets()
-  },
-  {
-    nick: 'Anty-Kuba',
-    isBot: true,
-    bets: randomBets()
   }
 ]
 
