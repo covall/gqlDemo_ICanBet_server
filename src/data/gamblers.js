@@ -1,5 +1,3 @@
-import { teams } from './teams'
-
 const randomResult = (withPenalties = false) => {
   // random between 0 and 3
   const result = [Math.floor(Math.random() * 4), Math.floor(Math.random() * 4)]
@@ -11,19 +9,10 @@ const randomResult = (withPenalties = false) => {
 
 const randomBets = () => {
   return {
-    firstPlace: getRandomTeam(teams),
-    secondPlace: getRandomTeam(teams),
-    thirdPlace: getRandomTeam(teams),
-    fourthPlace: getRandomTeam(teams),
     games: Array(64)
       .fill()
       .map((_, index) => ({ id: index + 1, bet: randomResult(index + 1 > 48) }))
   }
-}
-
-const getRandomTeam = teams => {
-  const index = Math.floor(Math.random() * teams.length)
-  return teams[index]
 }
 
 const gamblers = [
