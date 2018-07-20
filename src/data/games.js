@@ -38,7 +38,7 @@ const games = [
     id: 4,
     phase: phases.GROUP,
     date: '2018-06-15T00:00:00',
-    teamA: getTeam('POR'),
+    teamA: getTeam('PRT'),
     teamB: getTeam('ESP'),
     result: [3, 3]
   },
@@ -55,7 +55,7 @@ const games = [
     phase: phases.GROUP,
     date: '2018-06-16T00:00:00',
     teamA: getTeam('ARG'),
-    teamB: getTeam('ICE'),
+    teamB: getTeam('ISL'),
     result: [1, 1]
   },
   {
@@ -70,7 +70,7 @@ const games = [
     id: 8,
     phase: phases.GROUP,
     date: '2018-06-16T00:00:00',
-    teamA: getTeam('CRO'),
+    teamA: getTeam('HRV'),
     teamB: getTeam('NER'),
     result: [2, 0]
   },
@@ -86,7 +86,7 @@ const games = [
     id: 10,
     phase: phases.GROUP,
     date: '2018-06-17T00:00:00',
-    teamA: getTeam('GER'),
+    teamA: getTeam('DEU'),
     teamB: getTeam('MEX'),
     result: [0, 1]
   },
@@ -95,7 +95,7 @@ const games = [
     phase: phases.GROUP,
     date: '2018-06-17T00:00:00',
     teamA: getTeam('BRA'),
-    teamB: getTeam('SWI'),
+    teamB: getTeam('CHE'),
     result: [1, 1]
   },
   {
@@ -119,7 +119,7 @@ const games = [
     phase: phases.GROUP,
     date: '2018-06-18T00:00:00',
     teamA: getTeam('TUN'),
-    teamB: getTeam('ENG'),
+    teamB: getTeam('GB-ENG'),
     result: [1, 2]
   },
   {
@@ -150,7 +150,7 @@ const games = [
     id: 18,
     phase: phases.GROUP,
     date: '2018-06-20T00:00:00',
-    teamA: getTeam('POR'),
+    teamA: getTeam('PRT'),
     teamB: getTeam('MAR'),
     result: [1, 0]
   },
@@ -191,7 +191,7 @@ const games = [
     phase: phases.GROUP,
     date: '2018-06-21T00:00:00',
     teamA: getTeam('ARG'),
-    teamB: getTeam('CRO'),
+    teamB: getTeam('HRV'),
     result: [0, 3]
   },
   {
@@ -207,7 +207,7 @@ const games = [
     phase: phases.GROUP,
     date: '2018-06-22T00:00:00',
     teamA: getTeam('NER'),
-    teamB: getTeam('ICE'),
+    teamB: getTeam('ISL'),
     result: [2, 0]
   },
   {
@@ -215,7 +215,7 @@ const games = [
     phase: phases.GROUP,
     date: '2018-06-22T00:00:00',
     teamA: getTeam('SRB'),
-    teamB: getTeam('SWI'),
+    teamB: getTeam('CHE'),
     result: [1, 2]
   },
   {
@@ -238,7 +238,7 @@ const games = [
     id: 29,
     phase: phases.GROUP,
     date: '2018-06-23T00:00:00',
-    teamA: getTeam('GER'),
+    teamA: getTeam('DEU'),
     teamB: getTeam('SWE'),
     result: [2, 1]
   },
@@ -246,7 +246,7 @@ const games = [
     id: 30,
     phase: phases.GROUP,
     date: '2018-06-24T00:00:00',
-    teamA: getTeam('ENG'),
+    teamA: getTeam('GB-ENG'),
     teamB: getTeam('PAN'),
     result: [6, 1]
   },
@@ -287,7 +287,7 @@ const games = [
     phase: phases.GROUP,
     date: '2018-06-25T00:00:00',
     teamA: getTeam('IRN'),
-    teamB: getTeam('POR'),
+    teamB: getTeam('PRT'),
     result: [1, 1]
   },
   {
@@ -327,8 +327,8 @@ const games = [
     id: 40,
     phase: phases.GROUP,
     date: '2018-06-26T00:00:00',
-    teamA: getTeam('ICE'),
-    teamB: getTeam('CRO'),
+    teamA: getTeam('ISL'),
+    teamB: getTeam('HRV'),
     result: [1, 2]
   },
 
@@ -345,14 +345,14 @@ const games = [
     phase: phases.GROUP,
     date: '2018-06-27T00:00:00',
     teamA: getTeam('KOR'),
-    teamB: getTeam('GER'),
+    teamB: getTeam('DEU'),
     result: [2, 0]
   },
   {
     id: 43,
     phase: phases.GROUP,
     date: '2018-06-27T00:00:00',
-    teamA: getTeam('SWI'),
+    teamA: getTeam('CHE'),
     teamB: getTeam('CRI'),
     result: [2, 2]
   },
@@ -385,7 +385,7 @@ const games = [
     id: 47,
     phase: phases.GROUP,
     date: '2018-06-27T00:00:00',
-    teamA: getTeam('ENG'),
+    teamA: getTeam('GB-ENG'),
     teamB: getTeam('BEL'),
     result: [0, 1]
   },
@@ -411,7 +411,7 @@ const games = [
     phase: phases.ONE_EIGHT,
     date: '2018-06-30T00:00:00',
     teamA: getTeam('URY'),
-    teamB: getTeam('POR'),
+    teamB: getTeam('PRT'),
     result: [2, 1]
   },
   {
@@ -427,7 +427,7 @@ const games = [
     id: 52,
     phase: phases.ONE_EIGHT,
     date: '2018-07-01T00:00:00',
-    teamA: getTeam('CRO'),
+    teamA: getTeam('HRV'),
     teamB: getTeam('DNK'),
     result: [1, 1],
     penalties: [3, 2]
@@ -453,7 +453,7 @@ const games = [
     phase: phases.ONE_EIGHT,
     date: '2018-07-03T00:00:00',
     teamA: getTeam('SWE'),
-    teamB: getTeam('SWI'),
+    teamB: getTeam('CHE'),
     result: [1, 0]
   },
   {
@@ -461,7 +461,7 @@ const games = [
     phase: phases.ONE_EIGHT,
     date: '2018-07-03T00:00:00',
     teamA: getTeam('COL'),
-    teamB: getTeam('ENG'),
+    teamB: getTeam('GB-ENG'),
     result: [1, 1],
     penalties: [3, 4]
   },
@@ -487,7 +487,7 @@ const games = [
     phase: phases.QUARTER_FINAL,
     date: '2018-07-07T00:00:00',
     teamA: getTeam('SWE'),
-    teamB: getTeam('ENG'),
+    teamB: getTeam('GB-ENG'),
     result: [0, 2]
   },
   {
@@ -495,7 +495,7 @@ const games = [
     phase: phases.QUARTER_FINAL,
     date: '2018-07-07T00:00:00',
     teamA: getTeam('RUS'),
-    teamB: getTeam('CRO'),
+    teamB: getTeam('HRV'),
     result: [2, 2],
     penalties: [3, 4]
   },
@@ -512,8 +512,8 @@ const games = [
     id: 62,
     phase: phases.SEMI_FINAL,
     date: '2018-07-11T00:00:00',
-    teamA: getTeam('CRO'),
-    teamB: getTeam('ENG'),
+    teamA: getTeam('HRV'),
+    teamB: getTeam('GB-ENG'),
     result: [2, 1]
   },
 
@@ -522,14 +522,14 @@ const games = [
     phase: phases.THIRD_PLACE,
     date: '2018-07-14T00:00:00',
     teamA: getTeam('BEL'),
-    teamB: getTeam('ENG'),
+    teamB: getTeam('GB-ENG'),
     result: [2, 0]
   },
   {
     id: 64,
     phase: phases.FINAL,
     date: '2018-07-15T00:00:00',
-    teamA: getTeam('CRO'),
+    teamA: getTeam('HRV'),
     teamB: getTeam('FRA'),
     result: [2, 4]
   }
