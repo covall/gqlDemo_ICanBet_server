@@ -32,12 +32,16 @@ const resolvers = {
     }
   },
   Query: {
-    hello: () => 'world',
     teams: () => teams,
     games: () => games,
     game: (_obj, args) => getGame(args.id),
     gamblers: () => gamblers,
-    gambler: (_obj, args) => getGambler(args.id)
+    gambler: (_obj, args) => getGambler(args.id),
+    bets: () =>
+      gamblers.reduce((allBets, gambler) => {
+        const gablerBets = gambler.bets
+        return [...allBets, ...gablerBets]
+      }, [])
   },
   Game: {
     result: game => {
@@ -61,21 +65,25 @@ const resolvers = {
   },
   Gambler: {
     name: gambler => gambler.nick,
-    id: gambler => gambler.nick,
-    bets: gambler => {
-      if (!gambler.bets) {
-        return []
-      }
+    id: gambler => gambler.nick
+    // bets: gambler => {
+    //   if (!gambler.bets) {
+    //     return []
+    //   }
 
-      return gambler.bets.map(gameWithBet => {
-        return {
-          gambler,
-          game: getGame(gameWithBet.gameId),
-          betNumbers: gameWithBet.betNumbers,
-          points: gameWithBet.points
-        }
-      })
-    }
+    //   return gambler.bets.map(gameWithBet => {
+    //     return {
+    //       gambler,
+    //       game: getGame(gameWithBet.gameId),
+    //       betNumbers: gameWithBet.betNumbers,
+    //       points: gameWithBet.points
+    //     }
+    //   })
+    // }
+  },
+  Bet: {
+    game: gameWithBet => getGame(gameWithBet.gameId),
+    gambler: gameWithBet => getGambler(gameWithBet.gamblerId)
   },
   BetNumbers: {
     a: result => result[0],

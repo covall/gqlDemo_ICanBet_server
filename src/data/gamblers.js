@@ -7,116 +7,46 @@ const randomResult = (withPenalties = false) => {
   return result
 }
 
-const randomBets = () => {
-  return Array(64)
-    .fill()
-    .map((_, index) => ({ gameId: index + 1, betNumbers: randomResult(index + 1 > 48) }))
+const gamblerWithRandomBets = gamblerId => {
+  return {
+    nick: gamblerId,
+    bets: Array(64)
+      .fill()
+      .map((_, index) => ({
+        gamblerId,
+        gameId: index + 1,
+        betNumbers: randomResult(index + 1 > 48)
+      }))
+  }
 }
 
 const getGambler = gamblerId => gamblers.find(gambler => gambler.nick === gamblerId)
 
 const gamblers = [
-  {
-    nick: 'Kosa',
-    bets: randomBets()
-  },
-  {
-    nick: 'Michał K.',
-    bets: randomBets()
-  },
-  {
-    nick: 'Arek G.',
-    bets: randomBets()
-  },
-  {
-    nick: 'Kalbar',
-    bets: randomBets()
-  },
-  {
-    nick: 'Wujek Gaweł',
-    bets: randomBets()
-  },
-  {
-    nick: 'Kamil K',
-    bets: randomBets()
-  },
-  {
-    nick: 'Aga',
-    bets: randomBets()
-  },
-  {
-    nick: 'Maniek',
-    bets: randomBets()
-  },
-  {
-    nick: 'Paweł N.',
-    bets: randomBets()
-  },
-  {
-    nick: 'Hala Banacha',
-    bets: randomBets()
-  },
-  {
-    nick: 'Ewelina',
-    bets: randomBets()
-  },
-  {
-    nick: 'Cisu',
-    bets: randomBets()
-  },
-  {
-    nick: 'Kobiela',
-    bets: randomBets()
-  },
-  {
-    nick: 'Daniel W.',
-    bets: randomBets()
-  },
-  {
-    nick: 'Bohillo',
-    bets: randomBets()
-  },
-
-  {
-    nick: 'Kuba S.',
-    bets: randomBets()
-  },
-
-  {
-    nick: 'Paweł P.',
-    bets: randomBets()
-  },
-
-  {
-    nick: 'Konrad K.',
-    bets: randomBets()
-  },
-
-  {
-    nick: 'Radek',
-    bets: randomBets()
-  },
-
-  {
-    nick: 'MSzyk',
-    bets: randomBets()
-  },
-  {
-    nick: 'Paweł J.',
-    bets: randomBets()
-  },
-  {
-    nick: 'Gamrot',
-    bets: randomBets()
-  },
-  {
-    nick: 'DamianR',
-    bets: randomBets()
-  },
-  {
-    nick: 'Kuba "Szef"',
-    bets: randomBets()
-  }
+  gamblerWithRandomBets('Kosa'),
+  gamblerWithRandomBets('Michał K.'),
+  gamblerWithRandomBets('Arek G.'),
+  gamblerWithRandomBets('Kalbar'),
+  gamblerWithRandomBets('Wujek Gaweł'),
+  gamblerWithRandomBets('Kamil K'),
+  gamblerWithRandomBets('Aga'),
+  gamblerWithRandomBets('Maniek'),
+  gamblerWithRandomBets('Paweł N.'),
+  gamblerWithRandomBets('Hala Banacha'),
+  gamblerWithRandomBets('Ewelina'),
+  gamblerWithRandomBets('Cisu'),
+  gamblerWithRandomBets('Kobiela'),
+  gamblerWithRandomBets('Daniel W.'),
+  gamblerWithRandomBets('Bohillo'),
+  gamblerWithRandomBets('Kuba S.'),
+  gamblerWithRandomBets('Paweł P.'),
+  gamblerWithRandomBets('Konrad K.'),
+  gamblerWithRandomBets('Radek'),
+  gamblerWithRandomBets('MSzyk'),
+  gamblerWithRandomBets('Paweł J.'),
+  gamblerWithRandomBets('Gamrot'),
+  gamblerWithRandomBets('DamianR'),
+  gamblerWithRandomBets('Kuba "Szef"')
 ]
 
 export { gamblers, getGambler }

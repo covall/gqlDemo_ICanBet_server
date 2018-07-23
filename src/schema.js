@@ -8,12 +8,12 @@ const typeDefs = gql`
 
   type Query {
     "A simple type for getting started!"
-    hello: String
     teams: [Team]!
     games: [Game]!
     game(id: ID!): Game
     gamblers: [Gambler]!
     gambler(id: ID!): Gambler
+    bets: [Bet]!
   }
 
   type Mutation {
