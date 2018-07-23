@@ -6,7 +6,7 @@ recalculatePointsAndPlaces(gamblers)
 
 const resolvers = {
   Mutation: {
-    bet: (_root, { gameId, gamblerId, betInput }) => {
+    makeBet: (_root, { gameId, gamblerId, betInput }) => {
       const gambler = getGambler(gamblerId)
       const gamblersBetForGame = getGamblersBetForGame(gambler, gameId)
 
