@@ -44,7 +44,13 @@ const resolvers = {
         aPenalties: game.result[2],
         bPenalties: game.result[3]
       }
-    }
+    },
+    bets: game =>
+      gamblers.reduce((allBets, gambler) => {
+        const gamblerBetsForGame = gambler.bets.filter(bet => bet.gameId === game.id)
+
+        return [...allBets, ...gamblerBetsForGame]
+      }, [])
   },
   Gambler: {
     name: gambler => gambler.nick,

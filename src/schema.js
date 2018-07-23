@@ -7,7 +7,6 @@ const typeDefs = gql`
   }
 
   type Query {
-    "A simple type for getting started!"
     teams: [Team]!
     games: [Game]!
     game(id: ID!): Game
@@ -65,6 +64,7 @@ const typeDefs = gql`
     teamA: Team!
     teamB: Team!
     result: GameResult
+    bets: [Bet]!
   }
 
   type GameResult {
