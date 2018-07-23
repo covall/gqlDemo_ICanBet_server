@@ -31,12 +31,6 @@ const typeDefs = gql`
     winInPenalties: TeamAOrB
   }
 
-  type BetNumbers {
-    a: Int!
-    b: Int!
-    winInPenalties: TeamAOrB
-  }
-
   type Bet {
     game: Game!
     gambler: Gambler!
@@ -44,17 +38,16 @@ const typeDefs = gql`
     points: Int
   }
 
+  type BetNumbers {
+    a: Int!
+    b: Int!
+    winInPenalties: TeamAOrB
+  }
+
   type Team {
     code: ID!
     name: String!
     group: String!
-  }
-
-  type GameResult {
-    a: Int!
-    b: Int!
-    aPenalties: Int
-    bPenalties: Int
   }
 
   type Gambler {
@@ -72,6 +65,13 @@ const typeDefs = gql`
     teamA: Team!
     teamB: Team!
     result: GameResult
+  }
+
+  type GameResult {
+    a: Int!
+    b: Int!
+    aPenalties: Int
+    bPenalties: Int
   }
 `
 

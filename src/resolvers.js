@@ -7,28 +7,21 @@ recalculatePointsAndPlaces(gamblers)
 const resolvers = {
   Mutation: {
     bet: (_root, { gameId, gamblerId, betInput }) => {
-      const gambler = gamblers.find(gambler => gambler.nick === gamblerId)
-      ensureGamblerHasGames(gambler)
-      const bet = gambler.bets.find(bet => String(bet.gameId) === String(gameId))
-      if (bet) {
-        bet.betNumbers = [betInput.a, betInput.b]
-        if (betInput.winInPenalties) {
-          if (betInput.winInPenalties === 'A') {
-            bet.betNumbers.push(1)
-          } else {
-            bet.betNumbers.push(2)
-          }
-        }
-        // !recalculate points and places
-        recalculatePointsAndPlaces(gamblers)
-        return {
-          game: getGame(gameId),
-          gambler,
-          betNumbers: bet.betNumbers,
-          points: bet.points
+      const gambler = getGambler(gamblerId)
+      const gamblersBetForGame = getGamblersBetForGame(gambler, gameId)
+
+      gamblersBetForGame.betNumbers = [betInput.a, betInput.b]
+      if (betInput.winInPenalties) {
+        if (betInput.winInPenalties === 'A') {
+          gamblersBetForGame.betNumbers.push(1)
+        } else {
+          gamblersBetForGame.betNumbers.push(2)
         }
       }
-      return null
+      // !recalculate points and places
+      recalculatePointsAndPlaces(gamblers)
+
+      return getGamblersBetForGame(gambler, gameId)
     }
   },
   Query: {
@@ -45,65 +38,51 @@ const resolvers = {
   },
   Game: {
     result: game => {
-      const penalties = game.penalties || []
-      return [...game.result, ...penalties]
-    }
-  },
-  GameResult: {
-    a: array => {
-      return array[0]
-    },
-    b: array => {
-      return array[1]
-    },
-    aPenalties: array => {
-      return array[2]
-    },
-    bPenalties: array => {
-      return array[3]
+      return {
+        a: game.result[0],
+        b: game.result[1],
+        aPenalties: game.result[2],
+        bPenalties: game.result[3]
+      }
     }
   },
   Gambler: {
     name: gambler => gambler.nick,
     id: gambler => gambler.nick
-    // bets: gambler => {
-    //   if (!gambler.bets) {
-    //     return []
-    //   }
-
-    //   return gambler.bets.map(gameWithBet => {
-    //     return {
-    //       gambler,
-    //       game: getGame(gameWithBet.gameId),
-    //       betNumbers: gameWithBet.betNumbers,
-    //       points: gameWithBet.points
-    //     }
-    //   })
-    // }
   },
   Bet: {
-    game: gameWithBet => getGame(gameWithBet.gameId),
-    gambler: gameWithBet => getGambler(gameWithBet.gamblerId)
-  },
-  BetNumbers: {
-    a: result => result[0],
-    b: result => result[1],
-    winInPenalties: result => {
-      if (!result[2]) {
-        return null
+    game: userBetForGame => getGame(userBetForGame.gameId),
+    gambler: userBetForGame => getGambler(userBetForGame.gamblerId),
+    betNumbers: userBetForGame => {
+      let winInPenalties
+      if (!userBetForGame.betNumbers[2]) {
+        winInPenalties = null
+      } else {
+        winInPenalties = userBetForGame.betNumbers[2] === 1 ? 'A' : 'B'
       }
-      return result[2] === 1 ? 'A' : 'B'
+      return {
+        a: userBetForGame.betNumbers[0],
+        b: userBetForGame.betNumbers[1],
+        winInPenalties
+      }
     }
   }
 }
 
-function ensureGamblerHasGames(gambler) {
-  if (!gambler.bets) {
-    gambler.bets = {}
+function getGamblersBetForGame(gambler, gameId) {
+  if (!Array.isArray(gambler.bets)) {
+    gambler.bets = []
   }
-  if (!Array.isArray(gambler.bets.games)) {
-    gambler.bets.games = []
+
+  let bet = gambler.bets.find(bet => String(bet.gameId) === String(gameId))
+  if (!bet) {
+    bet = {
+      gamblerId: gambler.id,
+      gameId,
+      betNumbers: null
+    }
   }
+  return bet
 }
 
 export default resolvers

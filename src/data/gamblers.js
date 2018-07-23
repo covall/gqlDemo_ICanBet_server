@@ -1,4 +1,6 @@
-const randomResult = (withPenalties = false) => {
+const randomResult = ({ withPenalties = false }) => {
+  // [1, 2] - result 1 : 2
+  // [2, 2, 1] - restult 2 : 2 and firs team won in penalties
   // random between 0 and 3
   const result = [Math.floor(Math.random() * 4), Math.floor(Math.random() * 4)]
   if (withPenalties && result[0] === result[1]) {
@@ -15,7 +17,7 @@ const gamblerWithRandomBets = gamblerId => {
       .map((_, index) => ({
         gamblerId,
         gameId: index + 1,
-        betNumbers: randomResult(index + 1 > 48)
+        betNumbers: randomResult({ withPenalties: index + 1 > 48 })
       }))
   }
 }

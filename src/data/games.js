@@ -420,8 +420,7 @@ const games = [
     date: '2018-07-01T00:00:00',
     teamA: getTeam('ESP'),
     teamB: getTeam('RUS'),
-    result: [1, 1],
-    penalties: [3, 4]
+    result: [1, 1, 3, 4]
   },
   {
     id: 52,
@@ -429,8 +428,7 @@ const games = [
     date: '2018-07-01T00:00:00',
     teamA: getTeam('CRO'),
     teamB: getTeam('DNK'),
-    result: [1, 1],
-    penalties: [3, 2]
+    result: [1, 1, 3, 2]
   },
   {
     id: 53,
@@ -462,8 +460,7 @@ const games = [
     date: '2018-07-03T00:00:00',
     teamA: getTeam('COL'),
     teamB: getTeam('ENG'),
-    result: [1, 1],
-    penalties: [3, 4]
+    result: [1, 1, 3, 4]
   },
 
   {
@@ -496,8 +493,7 @@ const games = [
     date: '2018-07-07T00:00:00',
     teamA: getTeam('RUS'),
     teamB: getTeam('CRO'),
-    result: [2, 2],
-    penalties: [3, 4]
+    result: [2, 2, 3, 4]
   },
 
   {
