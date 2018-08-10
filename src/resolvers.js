@@ -28,7 +28,7 @@ const resolvers = {
 
       if (resultInput.aPenalties !== null || resultInput.bPenalties !== null) {
         if (resultInput.aPenalties === null || resultInput.bPenalties === null) {
-          throw new Error('Należy wprowadzić kompletny wynik karnych.')
+          throw new Error('Wprowadź kompletny wynik karnych.')
         }
 
         if (resultInput.aPenalties === resultInput.bPenalties) {
@@ -40,8 +40,8 @@ const resolvers = {
         throw new Error('Minusowy wynik? Bez jaj.')
       }
 
-      if (game.phase !== 'Grupa' && resultInput.a === resultInput.b) {
-        throw new Error('Jak to remis? Karne powinny być!')
+      if (game.phase !== 'Grupa' && resultInput.a === resultInput.b && (resultInput.aPenalties === null && resultInput.bPenalties === null)) {
+        throw new Error('Jak to remis? Karne wprowadź.')
       }
 
       game.result[0] = resultInput.a
