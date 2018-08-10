@@ -1,6 +1,6 @@
 const randomResult = ({ withPenalties = false }) => {
   // [1, 2] - result 1 : 2
-  // [2, 2, 1] - restult 2 : 2 and firs team won in penalties
+  // [2, 2, 1] - result 2 : 2 and first team won in penalties
   // random between 0 and 3
   const result = [Math.floor(Math.random() * 4), Math.floor(Math.random() * 4)]
   if (withPenalties && result[0] === result[1]) {
@@ -30,25 +30,25 @@ const gamblers = [
   gamblerWithRandomBets('Arek G.'),
   gamblerWithRandomBets('Kalbar'),
   gamblerWithRandomBets('Wujek Gaweł'),
-  gamblerWithRandomBets('Kamil K'),
-  gamblerWithRandomBets('Aga'),
-  gamblerWithRandomBets('Maniek'),
-  gamblerWithRandomBets('Paweł N.'),
-  gamblerWithRandomBets('Hala Banacha'),
-  gamblerWithRandomBets('Ewelina'),
-  gamblerWithRandomBets('Cisu'),
-  gamblerWithRandomBets('Kobiela'),
-  gamblerWithRandomBets('Daniel W.'),
-  gamblerWithRandomBets('Bohillo'),
-  gamblerWithRandomBets('Kuba S.'),
-  gamblerWithRandomBets('Paweł P.'),
-  gamblerWithRandomBets('Konrad K.'),
-  gamblerWithRandomBets('Radek'),
-  gamblerWithRandomBets('MSzyk'),
-  gamblerWithRandomBets('Paweł J.'),
-  gamblerWithRandomBets('Gamrot'),
-  gamblerWithRandomBets('DamianR'),
-  gamblerWithRandomBets('Kuba "Szef"')
+  // gamblerWithRandomBets('Kamil K'),
+  // gamblerWithRandomBets('Aga'),
+  // gamblerWithRandomBets('Maniek'),
+  // gamblerWithRandomBets('Paweł N.'),
+  // gamblerWithRandomBets('Hala Banacha'),
+  // gamblerWithRandomBets('Ewelina'),
+  // gamblerWithRandomBets('Cisu'),
+  // gamblerWithRandomBets('Kobiela'),
+  // gamblerWithRandomBets('Daniel W.'),
+  // gamblerWithRandomBets('Bohillo'),
+  // gamblerWithRandomBets('Kuba S.'),
+  // gamblerWithRandomBets('Paweł P.'),
+  // gamblerWithRandomBets('Konrad K.'),
+  // gamblerWithRandomBets('Radek'),
+  // gamblerWithRandomBets('MSzyk'),
+  // gamblerWithRandomBets('Paweł J.'),
+  // gamblerWithRandomBets('Gamrot'),
+  // gamblerWithRandomBets('DamianR'),
+  // gamblerWithRandomBets('Kuba "Szef"')
 ]
 
 export { gamblers, getGambler }

@@ -17,6 +17,7 @@ const typeDefs = gql`
 
   type Mutation {
     makeBet(gameId: ID!, gamblerId: ID!, betInput: BetInput!): Bet
+    editGameResult(id: ID!, resultInput: GameResultInput!): Game
   }
 
   enum TeamAOrB {
@@ -28,6 +29,13 @@ const typeDefs = gql`
     a: Int!
     b: Int!
     winInPenalties: TeamAOrB
+  }
+
+  input GameResultInput {
+    a: Int!
+    b: Int!
+    aPenalties: Int
+    bPenalties: Int
   }
 
   type Bet {

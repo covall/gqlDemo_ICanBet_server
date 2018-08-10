@@ -22,7 +22,37 @@ const resolvers = {
       recalculatePointsAndPlaces(gamblers)
 
       return getGamblersBetForGame(gambler, gameId)
-    }
+    },
+    editGameResult: (_root, { id, resultInput }) => {
+      const game = getGame(id)
+
+      if (resultInput.aPenalties !== null || resultInput.bPenalties !== null) {
+        if (resultInput.aPenalties === null || resultInput.bPenalties === null) {
+          throw new Error('Należy wprowadzić kompletny wynik karnych.')
+        }
+
+        if (resultInput.aPenalties === resultInput.bPenalties) {
+          throw new Error('Nie można dodać remisu w karnych.')
+        }
+      }
+
+      if (resultInput.a < 0 || resultInput.b < 0 || resultInput.aPenalties < 0 || resultInput.bPenalties < 0) {
+        throw new Error('Minusowy wynik? Bez jaj.')
+      }
+
+      if (game.phase !== 'Grupa' && resultInput.a === resultInput.b) {
+        throw new Error('Jak to remis? Karne powinny być!')
+      }
+
+      game.result[0] = resultInput.a
+      game.result[1] = resultInput.b
+      game.result[2] = resultInput.aPenalties
+      game.result[3] = resultInput.bPenalties
+
+      recalculatePointsAndPlaces(gamblers)
+
+      return game
+    },
   },
   Query: {
     teams: () => teams,
@@ -32,8 +62,8 @@ const resolvers = {
     gambler: (_obj, args) => getGambler(args.id),
     bets: () =>
       gamblers.reduce((allBets, gambler) => {
-        const gablerBets = gambler.bets
-        return [...allBets, ...gablerBets]
+        const gamblerBets = gambler.bets
+        return [...allBets, ...gamblerBets]
       }, [])
   },
   Game: {
