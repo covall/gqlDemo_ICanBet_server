@@ -1,3 +1,5 @@
+import slugify from 'slugify'
+
 const randomResult = ({ withPenalties = false }) => {
   // [1, 2] - result 1 : 2
   // [2, 2, 1] - result 2 : 2 and first team won in penalties
@@ -15,6 +17,7 @@ const gamblerWithRandomBets = gamblerId => {
     bets: Array(64)
       .fill()
       .map((_, index) => ({
+        id: `${getGamblerSlug(gamblerId)}-${index + 1}`,
         gamblerId,
         gameId: index + 1,
         betNumbers: randomResult({ withPenalties: index + 1 > 48 })
@@ -24,31 +27,23 @@ const gamblerWithRandomBets = gamblerId => {
 
 const getGambler = gamblerId => gamblers.find(gambler => gambler.nick === gamblerId)
 
+const getGamblerSlug = (name) => {
+  return slugify(name, {
+    replacement: '-',
+    remove: /\s/gi,
+    lower: true
+  })
+}
+
 const gamblers = [
-  gamblerWithRandomBets('Kosa'),
-  gamblerWithRandomBets('Michał K.'),
-  gamblerWithRandomBets('Arek G.'),
-  gamblerWithRandomBets('Kalbar'),
-  gamblerWithRandomBets('Wujek Gaweł'),
-  // gamblerWithRandomBets('Kamil K'),
-  // gamblerWithRandomBets('Aga'),
-  // gamblerWithRandomBets('Maniek'),
-  // gamblerWithRandomBets('Paweł N.'),
-  // gamblerWithRandomBets('Hala Banacha'),
-  // gamblerWithRandomBets('Ewelina'),
-  // gamblerWithRandomBets('Cisu'),
-  // gamblerWithRandomBets('Kobiela'),
-  // gamblerWithRandomBets('Daniel W.'),
-  // gamblerWithRandomBets('Bohillo'),
-  // gamblerWithRandomBets('Kuba S.'),
-  // gamblerWithRandomBets('Paweł P.'),
-  // gamblerWithRandomBets('Konrad K.'),
-  // gamblerWithRandomBets('Radek'),
-  // gamblerWithRandomBets('MSzyk'),
-  // gamblerWithRandomBets('Paweł J.'),
-  // gamblerWithRandomBets('Gamrot'),
-  // gamblerWithRandomBets('DamianR'),
-  // gamblerWithRandomBets('Kuba "Szef"')
+  gamblerWithRandomBets('Piotrek'),
+  gamblerWithRandomBets('Konrad'),
+  gamblerWithRandomBets('Tomek'),
+  gamblerWithRandomBets('Kuba'),
+  gamblerWithRandomBets('Marek'),
+  gamblerWithRandomBets('Marcin'),
+  gamblerWithRandomBets('Ewelina'),
+  gamblerWithRandomBets('Wiesława')
 ]
 
 export { gamblers, getGambler }

@@ -39,6 +39,7 @@ const typeDefs = gql`
   }
 
   type Bet {
+    id: ID!
     game: Game!
     gambler: Gambler!
     betNumbers: BetNumbers

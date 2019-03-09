@@ -32,16 +32,16 @@ const resolvers = {
         }
 
         if (resultInput.aPenalties === resultInput.bPenalties) {
-          throw new Error('Nie można dodać remisu w karnych.')
+          throw new Error('Nie można dodać remisu w rzutach karnych.')
         }
       }
 
       if (resultInput.a < 0 || resultInput.b < 0 || resultInput.aPenalties < 0 || resultInput.bPenalties < 0) {
-        throw new Error('Minusowy wynik? Bez jaj.')
+        throw new Error('Minusowy wynik?')
       }
 
       if (game.phase !== 'Grupa' && resultInput.a === resultInput.b && (resultInput.aPenalties === null && resultInput.bPenalties === null)) {
-        throw new Error('Jak to remis? Karne wprowadź.')
+        throw new Error('Wprowadź wynik rzutów karnych.')
       }
 
       game.result[0] = resultInput.a
@@ -111,6 +111,7 @@ function getGamblersBetForGame(gambler, gameId) {
   }
 
   let bet = gambler.bets.find(bet => String(bet.gameId) === String(gameId))
+  console.log('bet', bet)
   if (!bet) {
     bet = {
       gamblerId: gambler.id,
