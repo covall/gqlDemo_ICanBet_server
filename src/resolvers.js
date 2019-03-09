@@ -111,7 +111,6 @@ function getGamblersBetForGame(gambler, gameId) {
   }
 
   let bet = gambler.bets.find(bet => String(bet.gameId) === String(gameId))
-  console.log('bet', bet)
   if (!bet) {
     bet = {
       gamblerId: gambler.id,
