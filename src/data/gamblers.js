@@ -1,4 +1,5 @@
 import slugify from 'slugify'
+import { recalculatePointsAndPlaces } from '../pointsAndPlace'
 
 const randomResult = ({ withPenalties = false }) => {
   // [1, 2] - result 1 : 2
@@ -25,9 +26,27 @@ const gamblerWithRandomBets = gamblerId => {
   }
 }
 
-const getGambler = gamblerId => gamblers.find(gambler => gambler.nick === gamblerId)
+const setEmptyGamblersBetsForGame = gameId => {
+  gamblers.forEach((gambler, index) => {
+    gambler.bets = [
+      ...gambler.bets,
+      {
+        id: `${getGamblerSlug(gambler.nick)}-${index + 1}`,
+        gamblerId: gambler.nick,
+        gameId,
+        betNumbers: [1, 2]
+      }
+    ]
+  })
 
-const getGamblerSlug = (name) => {
+  // !recalculate points and places
+  recalculatePointsAndPlaces(gamblers)
+}
+
+const getGambler = gamblerId =>
+  gamblers.find(gambler => gambler.nick === gamblerId)
+
+const getGamblerSlug = name => {
   return slugify(name, {
     replacement: '-',
     remove: /\s/gi,
@@ -46,4 +65,4 @@ const gamblers = [
   gamblerWithRandomBets('Wiesława')
 ]
 
-export { gamblers, getGambler }
+export { gamblers, getGambler, setEmptyGamblersBetsForGame }

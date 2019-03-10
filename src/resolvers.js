@@ -1,6 +1,15 @@
 // A map of functions which return data for the schema.
-import { teams, games, getGame, getTeam, gamblers, getGambler } from './data'
+import {
+  teams,
+  games,
+  getGame,
+  getTeam,
+  gamblers,
+  getGambler,
+  getGamblersBetForGame
+} from './data'
 import { recalculatePointsAndPlaces } from './pointsAndPlace'
+import { setEmptyGamblersBetsForGame } from './data/gamblers'
 
 recalculatePointsAndPlaces(gamblers)
 
@@ -41,9 +50,10 @@ const resolvers = {
     },
     addGameResult: (_root, { phase, date, teamA, teamB, resultInput }) => {
       const lastGame = games[games.length - 1]
+      const newGameId = lastGame.id + 1
 
       const game = {
-        id: lastGame.id + 1,
+        id: newGameId,
         phase,
         date,
         teamA: getTeam(teamA),
@@ -63,7 +73,7 @@ const resolvers = {
 
       games.push(game)
 
-      recalculatePointsAndPlaces(gamblers)
+      setEmptyGamblersBetsForGame(newGameId)
 
       return game
     }
@@ -119,22 +129,6 @@ const resolvers = {
       }
     }
   }
-}
-
-const getGamblersBetForGame = (gambler, gameId) => {
-  if (!Array.isArray(gambler.bets)) {
-    gambler.bets = []
-  }
-
-  let bet = gambler.bets.find(bet => String(bet.gameId) === String(gameId))
-  if (!bet) {
-    bet = {
-      gamblerId: gambler.id,
-      gameId,
-      betNumbers: null
-    }
-  }
-  return bet
 }
 
 const getResultInputValidationMessage = gameData => {
