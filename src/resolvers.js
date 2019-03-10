@@ -1,5 +1,5 @@
 // A map of functions which return data for the schema.
-import { teams, games, getGame, gamblers, getGambler } from './data'
+import { teams, games, getGame, getTeam, gamblers, getGambler } from './data'
 import { recalculatePointsAndPlaces } from './pointsAndPlace'
 
 recalculatePointsAndPlaces(gamblers)
@@ -25,34 +25,48 @@ const resolvers = {
     },
     editGameResult: (_root, { id, resultInput }) => {
       const game = getGame(id)
-
-      if (resultInput.aPenalties !== null || resultInput.bPenalties !== null) {
-        if (resultInput.aPenalties === null || resultInput.bPenalties === null) {
-          throw new Error('Wprowadź kompletny wynik karnych.')
-        }
-
-        if (resultInput.aPenalties === resultInput.bPenalties) {
-          throw new Error('Nie można dodać remisu w rzutach karnych.')
-        }
-      }
-
-      if (resultInput.a < 0 || resultInput.b < 0 || resultInput.aPenalties < 0 || resultInput.bPenalties < 0) {
-        throw new Error('Minusowy wynik?')
-      }
-
-      if (game.phase !== 'Grupa' && resultInput.a === resultInput.b && (resultInput.aPenalties === null && resultInput.bPenalties === null)) {
-        throw new Error('Wprowadź wynik rzutów karnych.')
-      }
-
       game.result[0] = resultInput.a
       game.result[1] = resultInput.b
       game.result[2] = resultInput.aPenalties
       game.result[3] = resultInput.bPenalties
 
+      const errorMessage = getResultInputValidationMessage(game)
+      if (errorMessage) {
+        throw new Error(errorMessage)
+      }
+
       recalculatePointsAndPlaces(gamblers)
 
       return game
     },
+    addGameResult: (_root, { phase, date, teamA, teamB, resultInput }) => {
+      const lastGame = games[games.length - 1]
+
+      const game = {
+        id: lastGame.id + 1,
+        phase,
+        date,
+        teamA: getTeam(teamA),
+        teamB: getTeam(teamB),
+        result: [
+          resultInput.a,
+          resultInput.b,
+          resultInput.aPenalties,
+          resultInput.bPenalties
+        ]
+      }
+      const errorMessage = getResultInputValidationMessage(game)
+
+      if (errorMessage) {
+        throw new Error(errorMessage)
+      }
+
+      games.push(game)
+
+      recalculatePointsAndPlaces(gamblers)
+
+      return game
+    }
   },
   Query: {
     teams: () => teams,
@@ -77,7 +91,9 @@ const resolvers = {
     },
     bets: game =>
       gamblers.reduce((allBets, gambler) => {
-        const gamblerBetsForGame = gambler.bets.filter(bet => bet.gameId === game.id)
+        const gamblerBetsForGame = gambler.bets.filter(
+          bet => bet.gameId === game.id
+        )
 
         return [...allBets, ...gamblerBetsForGame]
       }, [])
@@ -105,7 +121,7 @@ const resolvers = {
   }
 }
 
-function getGamblersBetForGame(gambler, gameId) {
+const getGamblersBetForGame = (gambler, gameId) => {
   if (!Array.isArray(gambler.bets)) {
     gambler.bets = []
   }
@@ -119,6 +135,42 @@ function getGamblersBetForGame(gambler, gameId) {
     }
   }
   return bet
+}
+
+const getResultInputValidationMessage = gameData => {
+  const resultA = gameData.result[0]
+  const resultB = gameData.result[1]
+  const resultAPenalties = gameData.result[2] || null
+  const resultBPenalties = gameData.result[3] || null
+
+  if (resultAPenalties !== null || resultBPenalties !== null) {
+    if (resultAPenalties === null || resultBPenalties === null) {
+      return 'Wprowadź kompletny wynik karnych.'
+    }
+
+    if (resultAPenalties === resultBPenalties) {
+      return 'Nie można dodać remisu w rzutach karnych.'
+    }
+  }
+
+  if (
+    resultA < 0 ||
+    resultB < 0 ||
+    resultAPenalties < 0 ||
+    resultBPenalties < 0
+  ) {
+    return 'Minusowy wynik?'
+  }
+
+  if (
+    gameData.phase !== 'Grupa' &&
+    resultA === resultB &&
+    (resultAPenalties === null && resultBPenalties === null)
+  ) {
+    return 'Wprowadź wynik rzutów karnych.'
+  }
+
+  return null
 }
 
 export default resolvers

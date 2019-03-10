@@ -17,6 +17,13 @@ const typeDefs = gql`
 
   type Mutation {
     makeBet(gameId: ID!, gamblerId: ID!, betInput: BetInput!): Bet
+    addGameResult(
+      phase: String!
+      date: String!
+      teamA: ID!
+      teamB: ID!
+      resultInput: GameResultInput!
+    ): Game
     editGameResult(id: ID!, resultInput: GameResultInput!): Game
   }
 
@@ -36,6 +43,11 @@ const typeDefs = gql`
     b: Int!
     aPenalties: Int
     bPenalties: Int
+  }
+
+  input TeamInput {
+    code: ID!
+    name: String!
   }
 
   type Bet {
