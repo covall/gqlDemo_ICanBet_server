@@ -18,6 +18,19 @@ const resolvers = {
     makeBet: (_root, { gameId, gamblerId, betInput }) => {
       const gambler = getGambler(gamblerId)
       const gamblersBetForGame = getGamblersBetForGame(gambler, gameId)
+      const game = getGame(gameId)
+      console.log('betInput.winInPenalties', betInput.winInPenalties)
+
+      if (betInput.a < 0 || betInput.b < 0) {
+        throw new Error('Minusowy wynik?')
+      }
+      if (
+        game.phase !== 'Grupa' &&
+        betInput.a === betInput.b &&
+        !betInput.winInPenalties
+      ) {
+        throw new Error('Wprowadź zwycięzcę rzutów karnych.')
+      }
 
       gamblersBetForGame.betNumbers = [betInput.a, betInput.b]
       if (betInput.winInPenalties) {
