@@ -19,7 +19,6 @@ const resolvers = {
       const gambler = getGambler(gamblerId)
       const gamblersBetForGame = getGamblersBetForGame(gambler, gameId)
       const game = getGame(gameId)
-      console.log('betInput.winInPenalties', betInput.winInPenalties)
 
       if (betInput.a < 0 || betInput.b < 0) {
         throw new Error('Minusowy wynik?')
