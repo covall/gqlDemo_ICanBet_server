@@ -21,7 +21,7 @@ const resolvers = {
       const game = getGame(gameId)
 
       if (betInput.a < 0 || betInput.b < 0) {
-        throw new Error('Minusowy wynik?')
+        throw new Error('Nie można wprowadzić minusowego wyniku.')
       }
       if (
         game.phase !== 'Grupa' &&
@@ -46,15 +46,19 @@ const resolvers = {
     },
     editGameResult: (_root, { id, resultInput }) => {
       const game = getGame(id)
-      game.result[0] = resultInput.a
-      game.result[1] = resultInput.b
-      game.result[2] = resultInput.aPenalties
-      game.result[3] = resultInput.bPenalties
+      const result = [
+        resultInput.a,
+        resultInput.b,
+        resultInput.aPenalties,
+        resultInput.bPenalties
+      ]
 
-      const errorMessage = getResultInputValidationMessage(game)
+      const errorMessage = getResultInputValidationMessage({ ...game, result })
       if (errorMessage) {
         throw new Error(errorMessage)
       }
+
+      game.result = result
 
       recalculatePointsAndPlaces(gamblers)
 
@@ -165,7 +169,7 @@ const getResultInputValidationMessage = gameData => {
     resultAPenalties < 0 ||
     resultBPenalties < 0
   ) {
-    return 'Minusowy wynik?'
+    return 'Nie można wprowadzić minusowego wyniku.'
   }
 
   if (
