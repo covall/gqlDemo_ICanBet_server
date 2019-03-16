@@ -95,11 +95,8 @@ const resolvers = {
     }
   },
   Query: {
-    teams: () => teams,
     games: () => games,
-    game: (_obj, args) => getGame(args.id),
     gamblers: () => gamblers,
-    gambler: (_obj, args) => getGambler(args.id),
     bets: () =>
       gamblers.reduce((allBets, gambler) => {
         const gamblerBets = gambler.bets

@@ -7,11 +7,8 @@ const typeDefs = gql`
   }
 
   type Query {
-    teams: [Team]!
     games: [Game]!
-    game(id: ID!): Game
     gamblers: [Gambler]!
-    gambler(id: ID!): Gambler
     bets: [Bet]!
   }
 
