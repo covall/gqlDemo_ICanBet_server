@@ -1,6 +1,5 @@
 // A map of functions which return data for the schema.
 import {
-  teams,
   games,
   getGame,
   getTeam,
@@ -20,15 +19,9 @@ const resolvers = {
       const gamblersBetForGame = getGamblersBetForGame(gambler, gameId)
       const game = getGame(gameId)
 
-      if (betInput.a < 0 || betInput.b < 0) {
-        throw new Error('Nie można wprowadzić minusowego wyniku.')
-      }
-      if (
-        game.phase !== 'Grupa' &&
-        betInput.a === betInput.b &&
-        !betInput.winInPenalties
-      ) {
-        throw new Error('Wprowadź zwycięzcę rzutów karnych.')
+      const errorMessage = getMakeBetValidationMessage(game, betInput)
+      if (errorMessage) {
+        throw new Error(errorMessage)
       }
 
       gamblersBetForGame.betNumbers = [betInput.a, betInput.b]
@@ -142,6 +135,22 @@ const resolvers = {
       }
     }
   }
+}
+
+const getMakeBetValidationMessage = (game, betInput) => {
+  if (betInput.a < 0 || betInput.b < 0) {
+    return 'Nie można wprowadzić minusowego wyniku.'
+  }
+
+  if (
+    game.phase !== 'Grupa' &&
+    betInput.a === betInput.b &&
+    !betInput.winInPenalties
+  ) {
+    return 'Wprowadź zwycięzcę rzutów karnych.'
+  }
+
+  return null
 }
 
 const getResultInputValidationMessage = gameData => {
