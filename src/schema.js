@@ -34,6 +34,12 @@ const typeDefs = gql`
     bets: [Bet]!
   }
 
+  type Team {
+    code: ID!
+    name: String!
+    group: String!
+  }
+
   enum TeamAOrB {
     A
     B
@@ -69,12 +75,6 @@ const typeDefs = gql`
     a: Int!
     b: Int!
     winInPenalties: TeamAOrB
-  }
-
-  type Team {
-    code: ID!
-    name: String!
-    group: String!
   }
 
   type Gambler {
