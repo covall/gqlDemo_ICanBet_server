@@ -24,6 +24,16 @@ const typeDefs = gql`
     editGameResult(id: ID!, resultInput: GameResultInput!): Game
   }
 
+  type Game {
+    id: ID!
+    phase: String!
+    date: String!
+    teamA: Team!
+    teamB: Team!
+    result: GameResult
+    bets: [Bet]!
+  }
+
   enum TeamAOrB {
     A
     B
@@ -73,16 +83,6 @@ const typeDefs = gql`
     bets: [Bet]!
     points: Int!
     place: Int!
-  }
-
-  type Game {
-    id: ID!
-    phase: String!
-    date: String!
-    teamA: Team!
-    teamB: Team!
-    result: GameResult
-    bets: [Bet]!
   }
 
   type GameResult {
