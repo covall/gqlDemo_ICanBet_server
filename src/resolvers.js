@@ -13,7 +13,36 @@ import { setEmptyGamblersBetsForGame } from './data/gamblers'
 recalculatePointsAndPlaces(gamblers)
 
 const resolvers = {
+  Query: {
+    games: () => games,
+    gamblers: () => gamblers,
+    bets: () =>
+      gamblers.reduce((allBets, gambler) => {
+        const gamblerBets = gambler.bets
+        return [...allBets, ...gamblerBets]
+      }, [])
+  },
   Mutation: {
+    editGameResult: (_root, { id, resultInput }) => {
+      const game = getGame(id)
+      const result = [
+        resultInput.a,
+        resultInput.b,
+        resultInput.aPenalties,
+        resultInput.bPenalties
+      ]
+
+      const errorMessage = getResultInputValidationMessage({ ...game, result })
+      if (errorMessage) {
+        throw new Error(errorMessage)
+      }
+
+      game.result = result
+
+      recalculatePointsAndPlaces(gamblers)
+
+      return game
+    },
     makeBet: (_root, { gameId, gamblerId, betInput }) => {
       const gambler = getGambler(gamblerId)
       const gamblersBetForGame = getGamblersBetForGame(gambler, gameId)
@@ -36,26 +65,6 @@ const resolvers = {
       recalculatePointsAndPlaces(gamblers)
 
       return getGamblersBetForGame(gambler, gameId)
-    },
-    editGameResult: (_root, { id, resultInput }) => {
-      const game = getGame(id)
-      const result = [
-        resultInput.a,
-        resultInput.b,
-        resultInput.aPenalties,
-        resultInput.bPenalties
-      ]
-
-      const errorMessage = getResultInputValidationMessage({ ...game, result })
-      if (errorMessage) {
-        throw new Error(errorMessage)
-      }
-
-      game.result = result
-
-      recalculatePointsAndPlaces(gamblers)
-
-      return game
     },
     addGameResult: (_root, { phase, date, teamA, teamB, resultInput }) => {
       const lastGame = games[games.length - 1]
@@ -86,15 +95,6 @@ const resolvers = {
 
       return game
     }
-  },
-  Query: {
-    games: () => games,
-    gamblers: () => gamblers,
-    bets: () =>
-      gamblers.reduce((allBets, gambler) => {
-        const gamblerBets = gambler.bets
-        return [...allBets, ...gamblerBets]
-      }, [])
   },
   Game: {
     result: game => {
