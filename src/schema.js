@@ -13,6 +13,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    editGameResult(id: ID!, resultInput: GameResultInput!): Game
     makeBet(gameId: ID!, gamblerId: ID!, betInput: BetInput!): Bet
     addGameResult(
       phase: String!
@@ -21,11 +22,21 @@ const typeDefs = gql`
       teamB: ID!
       resultInput: GameResultInput!
     ): Game
-    editGameResult(id: ID!, resultInput: GameResultInput!): Game
   }
 
+  """
+  Type Game represents a match with result
+  """
   type Game {
     id: ID!
+    """
+    Phase of game can be the following values:
+    1. "Grupa" - group
+    2. "1/8 finału" - round of 16,
+    3. "Ćwierćfinał" - quarter-final,
+    4. "Półfinał" - semi-final
+    5. "Finał" - final
+    """
     phase: String!
     date: String!
     teamA: Team!
@@ -34,6 +45,9 @@ const typeDefs = gql`
     bets: [Bet]!
   }
 
+  """
+  Type Team represents a team
+  """
   type Team {
     code: ID!
     name: String!
@@ -45,12 +59,18 @@ const typeDefs = gql`
     B
   }
 
+  """
+  Input parameters - making bet
+  """
   input BetInput {
     a: Int!
     b: Int!
     winInPenalties: TeamAOrB
   }
 
+  """
+  Input parameters - edit game result
+  """
   input GameResultInput {
     a: Int!
     b: Int!
@@ -63,6 +83,9 @@ const typeDefs = gql`
     name: String!
   }
 
+  """
+  Type Bet represents a gambler's **bet**
+  """
   type Bet {
     id: ID!
     game: Game!
@@ -77,6 +100,9 @@ const typeDefs = gql`
     winInPenalties: TeamAOrB
   }
 
+  """
+  Type Gambler represents a **gambler**, who bets matches
+  """
   type Gambler {
     id: ID!
     name: String!
@@ -85,10 +111,25 @@ const typeDefs = gql`
     place: Int!
   }
 
+  """
+  Type GameResult represents a **game result**
+  """
   type GameResult {
+    """
+    First team result
+    """
     a: Int!
+    """
+    Second team result
+    """
     b: Int!
+    """
+    First team penalty kicks result
+    """
     aPenalties: Int
+    """
+    First team penalty kicks result
+    """
     bPenalties: Int
   }
 `
