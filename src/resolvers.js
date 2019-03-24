@@ -37,7 +37,7 @@ const resolvers = {
         throw new Error(errorMessage)
       }
 
-      game.result = result
+      saveGameResult(game, result)
 
       recalculatePointsAndPlaces(gamblers)
 
@@ -187,6 +187,10 @@ const getResultInputValidationMessage = gameData => {
   }
 
   return null
+}
+
+const saveGameResult = (game, newResult) => {
+  game.result = newResult
 }
 
 export default resolvers
