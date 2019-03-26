@@ -55,14 +55,14 @@ const getGamblerSlug = name => {
 }
 
 const gamblers = [
-  gamblerWithRandomBets('Piotrek'),
-  gamblerWithRandomBets('Konrad'),
-  gamblerWithRandomBets('Tomek'),
-  gamblerWithRandomBets('Kuba'),
-  gamblerWithRandomBets('Marek'),
-  gamblerWithRandomBets('Marcin'),
-  gamblerWithRandomBets('Ewelina'),
-  gamblerWithRandomBets('Wiesława')
+  gamblerWithRandomBets('Peter'),
+  gamblerWithRandomBets('Conrad'),
+  gamblerWithRandomBets('Thomas'),
+  gamblerWithRandomBets('Jacob'),
+  gamblerWithRandomBets('Mark'),
+  gamblerWithRandomBets('Mathew'),
+  gamblerWithRandomBets('Evelyn'),
+  gamblerWithRandomBets('Victoria')
 ]
 
 export { gamblers, getGambler, setEmptyGamblersBetsForGame }
