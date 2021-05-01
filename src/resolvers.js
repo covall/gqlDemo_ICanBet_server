@@ -1,14 +1,57 @@
 // A map of functions which return data for the schema.
-import { teams, games, getGame, gamblers, getGambler } from './data'
+import {
+  games,
+  getGame,
+  getTeam,
+  gamblers,
+  getGambler,
+  getGamblersBetForGame
+} from './data'
 import { recalculatePointsAndPlaces } from './pointsAndPlace'
+import { setEmptyGamblersBetsForGame } from './data/gamblers'
 
 recalculatePointsAndPlaces(gamblers)
 
 const resolvers = {
+  Query: {
+    games: () => games,
+    gamblers: () => gamblers,
+    bets: () =>
+      gamblers.reduce((allBets, gambler) => {
+        const gamblerBets = gambler.bets
+        return [...allBets, ...gamblerBets]
+      }, [])
+  },
   Mutation: {
+    editGameResult: (_root, { id, resultInput }) => {
+      const game = getGame(id)
+      const result = [
+        resultInput.a,
+        resultInput.b,
+        resultInput.aPenalties,
+        resultInput.bPenalties
+      ]
+
+      const errorMessage = getResultInputValidationMessage({ ...game, result })
+      if (errorMessage) {
+        throw new Error(errorMessage)
+      }
+
+      saveGameResult(game, result)
+
+      recalculatePointsAndPlaces(gamblers)
+
+      return game
+    },
     makeBet: (_root, { gameId, gamblerId, betInput }) => {
       const gambler = getGambler(gamblerId)
       const gamblersBetForGame = getGamblersBetForGame(gambler, gameId)
+      const game = getGame(gameId)
+
+      const errorMessage = getMakeBetValidationMessage(game, betInput)
+      if (errorMessage) {
+        throw new Error(errorMessage)
+      }
 
       gamblersBetForGame.betNumbers = [betInput.a, betInput.b]
       if (betInput.winInPenalties) {
@@ -23,48 +66,35 @@ const resolvers = {
 
       return getGamblersBetForGame(gambler, gameId)
     },
-    editGameResult: (_root, { id, resultInput }) => {
-      const game = getGame(id)
+    addGameResult: (_root, { phase, date, teamA, teamB, resultInput }) => {
+      const lastGame = games[games.length - 1]
+      const newGameId = lastGame.id + 1
 
-      if (resultInput.aPenalties !== null || resultInput.bPenalties !== null) {
-        if (resultInput.aPenalties === null || resultInput.bPenalties === null) {
-          throw new Error('Wprowadź kompletny wynik karnych.')
-        }
+      const game = {
+        id: newGameId,
+        phase,
+        date,
+        teamA: getTeam(teamA),
+        teamB: getTeam(teamB),
+        result: [
+          resultInput.a,
+          resultInput.b,
+          resultInput.aPenalties,
+          resultInput.bPenalties
+        ]
+      }
+      const errorMessage = getResultInputValidationMessage(game)
 
-        if (resultInput.aPenalties === resultInput.bPenalties) {
-          throw new Error('Nie można dodać remisu w karnych.')
-        }
+      if (errorMessage) {
+        throw new Error(errorMessage)
       }
 
-      if (resultInput.a < 0 || resultInput.b < 0 || resultInput.aPenalties < 0 || resultInput.bPenalties < 0) {
-        throw new Error('Minusowy wynik? Bez jaj.')
-      }
+      games.push(game)
 
-      if (game.phase !== 'Grupa' && resultInput.a === resultInput.b && (resultInput.aPenalties === null && resultInput.bPenalties === null)) {
-        throw new Error('Jak to remis? Karne wprowadź.')
-      }
-
-      game.result[0] = resultInput.a
-      game.result[1] = resultInput.b
-      game.result[2] = resultInput.aPenalties
-      game.result[3] = resultInput.bPenalties
-
-      recalculatePointsAndPlaces(gamblers)
+      setEmptyGamblersBetsForGame(newGameId)
 
       return game
-    },
-  },
-  Query: {
-    teams: () => teams,
-    games: () => games,
-    game: (_obj, args) => getGame(args.id),
-    gamblers: () => gamblers,
-    gambler: (_obj, args) => getGambler(args.id),
-    bets: () =>
-      gamblers.reduce((allBets, gambler) => {
-        const gamblerBets = gambler.bets
-        return [...allBets, ...gamblerBets]
-      }, [])
+    }
   },
   Game: {
     result: game => {
@@ -77,7 +107,9 @@ const resolvers = {
     },
     bets: game =>
       gamblers.reduce((allBets, gambler) => {
-        const gamblerBetsForGame = gambler.bets.filter(bet => bet.gameId === game.id)
+        const gamblerBetsForGame = gambler.bets.filter(
+          bet => bet.gameId === game.id
+        )
 
         return [...allBets, ...gamblerBetsForGame]
       }, [])
@@ -105,20 +137,60 @@ const resolvers = {
   }
 }
 
-function getGamblersBetForGame(gambler, gameId) {
-  if (!Array.isArray(gambler.bets)) {
-    gambler.bets = []
+const getMakeBetValidationMessage = (game, betInput) => {
+  if (betInput.a < 0 || betInput.b < 0) {
+    return 'Nie można wprowadzić minusowego wyniku.'
   }
 
-  let bet = gambler.bets.find(bet => String(bet.gameId) === String(gameId))
-  if (!bet) {
-    bet = {
-      gamblerId: gambler.id,
-      gameId,
-      betNumbers: null
+  if (
+    game.phase !== 'Grupa' &&
+    betInput.a === betInput.b &&
+    !betInput.winInPenalties
+  ) {
+    return 'Wprowadź zwycięzcę rzutów karnych.'
+  }
+
+  return null
+}
+
+const getResultInputValidationMessage = gameData => {
+  const resultA = gameData.result[0]
+  const resultB = gameData.result[1]
+  const resultAPenalties = gameData.result[2] || null
+  const resultBPenalties = gameData.result[3] || null
+
+  if (resultAPenalties !== null || resultBPenalties !== null) {
+    if (resultAPenalties === null || resultBPenalties === null) {
+      return 'Wprowadź kompletny wynik karnych.'
+    }
+
+    if (resultAPenalties === resultBPenalties) {
+      return 'Nie można dodać remisu w rzutach karnych.'
     }
   }
-  return bet
+
+  if (
+    resultA < 0 ||
+    resultB < 0 ||
+    resultAPenalties < 0 ||
+    resultBPenalties < 0
+  ) {
+    return 'Nie można wprowadzić minusowego wyniku.'
+  }
+
+  if (
+    gameData.phase !== 'Grupa' &&
+    resultA === resultB &&
+    (resultAPenalties === null && resultBPenalties === null)
+  ) {
+    return 'Wprowadź wynik rzutów karnych.'
+  }
+
+  return null
+}
+
+const saveGameResult = (game, newResult) => {
+  game.result = newResult
 }
 
 export default resolvers

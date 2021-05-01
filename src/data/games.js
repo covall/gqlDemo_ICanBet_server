@@ -533,4 +533,20 @@ const games = [
 
 const getGame = id => games.find(g => String(g.id) === String(id))
 
-export { games, getGame }
+const getGamblersBetForGame = (gambler, gameId) => {
+  if (!Array.isArray(gambler.bets)) {
+    gambler.bets = []
+  }
+
+  let bet = gambler.bets.find(bet => String(bet.gameId) === String(gameId))
+  if (!bet) {
+    bet = {
+      gamblerId: gambler.id,
+      gameId,
+      betNumbers: null
+    }
+  }
+  return bet
+}
+
+export { games, getGame, getGamblersBetForGame }

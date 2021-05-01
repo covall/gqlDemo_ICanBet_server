@@ -1,3 +1,6 @@
+import slugify from 'slugify'
+import { recalculatePointsAndPlaces } from '../pointsAndPlace'
+
 const randomResult = ({ withPenalties = false }) => {
   // [1, 2] - result 1 : 2
   // [2, 2, 1] - result 2 : 2 and first team won in penalties
@@ -15,6 +18,7 @@ const gamblerWithRandomBets = gamblerId => {
     bets: Array(64)
       .fill()
       .map((_, index) => ({
+        id: `${getGamblerSlug(gamblerId)}-${index + 1}`,
         gamblerId,
         gameId: index + 1,
         betNumbers: randomResult({ withPenalties: index + 1 > 48 })
@@ -22,33 +26,43 @@ const gamblerWithRandomBets = gamblerId => {
   }
 }
 
-const getGambler = gamblerId => gamblers.find(gambler => gambler.nick === gamblerId)
+const setEmptyGamblersBetsForGame = gameId => {
+  gamblers.forEach((gambler, index) => {
+    gambler.bets = [
+      ...gambler.bets,
+      {
+        id: `${getGamblerSlug(gambler.nick)}-${index + 1}`,
+        gamblerId: gambler.nick,
+        gameId,
+        betNumbers: [1, 2]
+      }
+    ]
+  })
+
+  // !recalculate points and places
+  recalculatePointsAndPlaces(gamblers)
+}
+
+const getGambler = gamblerId =>
+  gamblers.find(gambler => gambler.nick === gamblerId)
+
+const getGamblerSlug = name => {
+  return slugify(name, {
+    replacement: '-',
+    remove: /\s/gi,
+    lower: true
+  })
+}
 
 const gamblers = [
-  gamblerWithRandomBets('Kosa'),
-  gamblerWithRandomBets('Michał K.'),
-  gamblerWithRandomBets('Arek G.'),
-  gamblerWithRandomBets('Kalbar'),
-  gamblerWithRandomBets('Wujek Gaweł'),
-  // gamblerWithRandomBets('Kamil K'),
-  // gamblerWithRandomBets('Aga'),
-  // gamblerWithRandomBets('Maniek'),
-  // gamblerWithRandomBets('Paweł N.'),
-  // gamblerWithRandomBets('Hala Banacha'),
-  // gamblerWithRandomBets('Ewelina'),
-  // gamblerWithRandomBets('Cisu'),
-  // gamblerWithRandomBets('Kobiela'),
-  // gamblerWithRandomBets('Daniel W.'),
-  // gamblerWithRandomBets('Bohillo'),
-  // gamblerWithRandomBets('Kuba S.'),
-  // gamblerWithRandomBets('Paweł P.'),
-  // gamblerWithRandomBets('Konrad K.'),
-  // gamblerWithRandomBets('Radek'),
-  // gamblerWithRandomBets('MSzyk'),
-  // gamblerWithRandomBets('Paweł J.'),
-  // gamblerWithRandomBets('Gamrot'),
-  // gamblerWithRandomBets('DamianR'),
-  // gamblerWithRandomBets('Kuba "Szef"')
+  gamblerWithRandomBets('Peter'),
+  gamblerWithRandomBets('Conrad'),
+  gamblerWithRandomBets('Thomas'),
+  gamblerWithRandomBets('Jacob'),
+  gamblerWithRandomBets('Mark'),
+  gamblerWithRandomBets('Mathew'),
+  gamblerWithRandomBets('Evelyn'),
+  gamblerWithRandomBets('Victoria')
 ]
 
-export { gamblers, getGambler }
+export { gamblers, getGambler, setEmptyGamblersBetsForGame }
